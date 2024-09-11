@@ -1,4 +1,4 @@
-version:3.8
+version: "3.8"
 services:
   postgres:
     image: postgres:15
@@ -21,7 +21,7 @@ services:
     networks:
       - ecrnow_network
     volumes:
-      - D://ecr-now:/config
+      - ./ecr-now:/config
     environment:
       - logging.file.name=/config/ecrNow.log
       - ersd.file.location=/config/eRSDv2_specification_bundle.json
@@ -30,15 +30,27 @@ services:
       - kar.directory=/config/kars
       - bsa.output.directory=/config/bsa-output/
       - custom-query.directory=/config/custom-queries
-      - jdbc.url=jdbc:postgresql://postgres_container:5432/ecrNow
+      - jdbc.url=jdbc:postgresql://postgres_container:5432/ecrnow
       - jdbc.username=postgres
-      - jdbc.password=ecr@2024
+      - jdbc.password=ecrnow@2024
       - security.key=test123
     ports:
-      - "8081:8080"
+      - "8081:8081"
+
+  ecr-now-ui:
+    container_name: ecr-now-ui
+    image: drajerhealth/ecr-now:ecr-now-ui-3.1.4
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_container
+    networks:
+      - ecrnow_network
+    environment:
+      - REACT_APP_ECR_BASE_URL=http://${HOSTNAME:-localhost}:8081
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
 
 networks:
   ecrnow_network:
     driver: bridge
-    external: true
     name: ecrnow_network
