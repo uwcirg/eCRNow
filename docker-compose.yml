@@ -21,7 +21,7 @@ services:
     networks:
       - ecrnow_network
     volumes:
-      - D://ecr-now:/config
+      - ./ecr-now:/config
     environment:
       - logging.file.name=/config/ecrNow.log
       - ersd.file.location=/config/eRSDv2_specification_bundle.json
