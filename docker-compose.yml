@@ -37,6 +37,19 @@ services:
     ports:
       - "8081:8081"
 
+  ecr-now-ui:
+    container_name: ecr-now-ui
+    image: drajerhealth/ecr-now:ecr-now-ui-3.1.4
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_container
+    networks:
+      - ecrnow_network
+    environment:
+      - REACT_APP_ECR_BASE_URL=http://${HOSTNAME:-localhost}:8081
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+
 networks:
   ecrnow_network:
     driver: bridge
